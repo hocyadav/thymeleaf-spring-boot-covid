@@ -1,5 +1,7 @@
 package com.hari.springsecurity;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.NameValuePair;
@@ -29,8 +31,10 @@ public class SpringSecurityApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         getExample();
+
         Thread.sleep(3000);
         postExample_SimpleData();
+
         Thread.sleep(3000);
         postExample_JsonData();
     }
@@ -108,9 +112,29 @@ public class SpringSecurityApplication implements CommandLineRunner {
             if (entity != null) {
                 // return it as a String
                 String result = EntityUtils.toString(entity);
-                System.out.println();
+                System.out.println("-----------");
                 System.out.println(result);
+//                storeInObjectMapper(result);
             }
         }
     }
+
+    @SneakyThrows
+    private void storeInObjectMapper(String result) {
+        System.err.println("SpringSecurityApplication.storeInObjectMapper");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        final Dummy dummy = objectMapper.readValue(result, Dummy.class);
+        System.out.println("dummy = " + dummy);
+    }
+}
+
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+class Dummy{
+    String origin;
 }
