@@ -1,6 +1,9 @@
 package com.hari.springsecurity.resource;
 
-import lombok.*;
+import com.hari.springsecurity.entity.Popularity;
+import com.hari.springsecurity.entity.TimeLineEntity;
+import com.hari.springsecurity.entity.TimeLineSingleEntity;
+import com.hari.springsecurity.entity.WorldDataTableEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -129,17 +132,17 @@ public class HomeResource {
         return "table-new-view";
     }
 
-    private List<TableEntity> getAllTableData() {
-        List<TableEntity> list = new ArrayList<>();
+    private List<WorldDataTableEntity> getAllTableData() {
+        List<WorldDataTableEntity> list = new ArrayList<>();
         list.add(getTableEntity("india", 1234, 123, 12, 2));
         list.add(getTableEntity("pakistan", 123, 23, 120, 21));
         list.add(getTableEntity("nepal", 1232, 823, 12, 9));
         return list;
     }
 
-    private TableEntity getTableEntity(String country, int totalCase, int newCase, int totalDeath, int newDeath) {
-        final TableEntity india =
-                TableEntity.builder().name(country)
+    private WorldDataTableEntity getTableEntity(String country, int totalCase, int newCase, int totalDeath, int newDeath) {
+        final WorldDataTableEntity india =
+                WorldDataTableEntity.builder().name(country)
                         .totalCase(totalCase).newCase(newCase)
                         .totalDeath(totalDeath).newDeath(newDeath).build();
         return india;
@@ -161,8 +164,8 @@ public class HomeResource {
 
     private TimeLineEntity getTimeLineEntity(int year, int month, int dayOfMonth, Integer value1, String start_title1, String text1, Integer value2, String start_title2, String text2) {
         TimeLineEntity e1 = TimeLineEntity.builder().date(LocalDate.of(year, month, dayOfMonth))
-                .entity1(Entity.builder().value(value1).title(start_title1).text(text1).build())
-                .entity2(Entity.builder().value(value2).title(start_title2).text(text2).build())
+                .entity1(TimeLineSingleEntity.builder().value(value1).title(start_title1).text(text1).build())
+                .entity2(TimeLineSingleEntity.builder().value(value2).title(start_title2).text(text2).build())
                 .build();
         return e1;
     }
@@ -232,7 +235,7 @@ public class HomeResource {
         return map;
     }
 
-    private Authentication getAuthentication() {
+    public Authentication getAuthentication() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("auth.getPrincipal() = " + auth.getPrincipal());
         System.out.println("auth.getName() = " + auth.getName());
@@ -241,53 +244,5 @@ public class HomeResource {
         System.out.println("auth.getCredentials() = " + auth.getCredentials());
         return auth;
     }
-}
-
-@Getter
-@Setter
-@AllArgsConstructor
-@Builder
-@NoArgsConstructor
-class Popularity {
-    int inDays;
-    int value1;
-    int value2;
-}
-
-@Getter
-@Setter
-@AllArgsConstructor
-@Builder
-@NoArgsConstructor
-class TableEntity {
-    String name;
-
-    Integer totalCase;
-    Integer newCase;
-
-    Integer totalDeath;
-    Integer newDeath;
-}
-
-@Getter
-@Setter
-@AllArgsConstructor
-@Builder
-@NoArgsConstructor
-class TimeLineEntity {
-    LocalDate date;
-    Entity entity1;
-    Entity entity2;
-}
-
-@Getter
-@Setter
-@AllArgsConstructor
-@Builder
-@NoArgsConstructor
-class Entity{
-    Integer value;
-    String title;
-    String text;
 }
 
