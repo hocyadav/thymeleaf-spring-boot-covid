@@ -101,17 +101,48 @@ public class HomeResource {
         return "map-state-data";
     }
 
+    //todo : use this one for comparsions
     @GetMapping("/ptime1")
     public String popularityTime(Model model) {//working - create 2 values graphs - but here it is based start time 0
         model.addAttribute("all_data", getAllPopularityTimeData());
         return "popularity-time";
     }
 
+    //todo : use this one for old to new graph
     //https://developers.google.com/chart/interactive/docs/gallery/annotationchart
     @GetMapping("/timeline")
     public String timelineChart(Model model) {//working
         model.addAttribute("all_data", getAllTimeLineData());
         return "timeline-chart";
+    }
+
+
+    @GetMapping("/table")
+    public String getTableData(Model model) {
+        model.addAttribute("all_data", getAllTableData());
+        return "table-view";
+    }
+
+    @GetMapping("/table2")
+    public String getTableData2(Model model) {
+        model.addAttribute("all_data", getAllTableData());
+        return "table-new-view";
+    }
+
+    private List<TableEntity> getAllTableData() {
+        List<TableEntity> list = new ArrayList<>();
+        list.add(getTableEntity("india", 1234, 123, 12, 2));
+        list.add(getTableEntity("pakistan", 123, 23, 120, 21));
+        list.add(getTableEntity("nepal", 1232, 823, 12, 9));
+        return list;
+    }
+
+    private TableEntity getTableEntity(String country, int totalCase, int newCase, int totalDeath, int newDeath) {
+        final TableEntity india =
+                TableEntity.builder().name(country)
+                        .totalCase(totalCase).newCase(newCase)
+                        .totalDeath(totalDeath).newDeath(newDeath).build();
+        return india;
     }
 
     //what i need to create this data
@@ -221,6 +252,21 @@ class Popularity {
     int inDays;
     int value1;
     int value2;
+}
+
+@Getter
+@Setter
+@AllArgsConstructor
+@Builder
+@NoArgsConstructor
+class TableEntity {
+    String name;
+
+    Integer totalCase;
+    Integer newCase;
+
+    Integer totalDeath;
+    Integer newDeath;
 }
 
 @Getter

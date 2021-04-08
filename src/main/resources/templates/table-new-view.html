@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Table view</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+<div id="table_sort_div" style="width: 400px"></div>
+<div id="chart_sort_div"></div>
+
+<script th:inline="javascript">
+    var real_data = /*[[${all_data}]]*/'noValue';
+
+    var arr = [];
+    for (let i = 0; i < real_data.length; i++) {
+        let obj = real_data[i];
+        var temp = [obj.name, obj.totalCase, obj.newCase, obj.totalDeath, obj.newDeath];
+        arr.push(temp);
+    }
+    alert(arr);
+
+    $(document).ready(
+        function () {
+            google.charts.load('current', {'packages': ['table', 'corechart', 'line']});
+            google.charts.setOnLoadCallback(drawSort);
+        });
+
+    function drawSort() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Country');
+        data.addColumn('number', 'totalCase');
+        data.addColumn('number', 'newCase');
+        data.addColumn('number', 'totalDeath');
+        data.addColumn('number', 'newDeath');
+        data.addRows(real_data.length);
+
+        for (let i = 0; i < real_data.length; i++) {
+            data.setCell(i, 0, real_data[i].name);
+            data.setCell(i, 1, real_data[i].totalCase);
+            data.setCell(i, 2, real_data[i].newCase);
+            data.setCell(i, 3, real_data[i].totalDeath);
+            data.setCell(i, 4, real_data[i].newDeath);
+        }
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1]);
+
+        var formatter = new google.visualization.NumberFormat({prefix: '$'});
+        formatter.format(data, 1); // Apply formatter to second column
+
+        var table = new google.visualization.Table(document.getElementById('table_sort_div'));
+        table.draw(data, {width: '100%', height: '100%'});
+
+        var chart = new google.visualization.BarChart(document.getElementById('chart_sort_div'));
+        chart.draw(view);
+
+        google.visualization.events.addListener(table, 'sort',
+            function (event) {
+                data.sort([{column: event.column, desc: !event.ascending}]);
+                chart.draw(view);
+            });
+    }
+</script>
+
+</body>
+</html>
