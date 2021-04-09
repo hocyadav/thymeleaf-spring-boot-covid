@@ -12,4 +12,11 @@ spring:
 #    static-locations: file:src/main/resources/static/
 #    cache-period: 0
 
+app-config:
+  simpleKey: "value"
+  allCountriesURL: "https://corona.lmao.ninja/v2/countries"
+  singleCountryURL: "https://corona.lmao.ninja/v2/countries/country_name"
+  singleCountryHistoryURL: "https://corona.lmao.ninja/v2/historical/country_name"
+
+
 
