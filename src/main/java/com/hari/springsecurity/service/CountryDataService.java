@@ -17,6 +17,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 import static com.hari.springsecurity.service.UtilService.getMapper;
@@ -30,10 +31,35 @@ public class CountryDataService {
     @Autowired
     AppConfig appConfig;
 
+    @SneakyThrows
+    public List<EntityHistoryData> getAllCountryHistoryData() {
+        final String url = appConfig.getAllCountryHistoryURL();
+        HttpGet request = new HttpGet(url);
+
+        try (CloseableHttpClient httpClient = HttpClients.createDefault();
+             CloseableHttpResponse response = httpClient.execute(request)) {
+            // Get HttpResponse Status
+            System.out.println(response.getProtocolVersion());              // HTTP/1.1
+            System.out.println(response.getStatusLine().getStatusCode());   // 200
+            System.out.println(response.getStatusLine().getReasonPhrase()); // OK
+            System.out.println(response.getStatusLine().toString());        // HTTP/1.1 200 OK
+
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                String result = EntityUtils.toString(entity);
+                final ObjectMapper mapper = getMapper();
+                final List<EntityHistoryData> historyData = mapper.readValue(result, new TypeReference<List<EntityHistoryData>>() {
+                });
+                return historyData;
+            }
+        }
+        return new LinkedList<>();
+    }
+
 
     @SneakyThrows
-    public EntityHistoryData getSingleCountryHistoryData() {
-        final String historyURL = appConfig.getSingleCountryHistoryURL().replace("country_name", "india");
+    public EntityHistoryData getSingleCountryHistoryData(String name) {//working
+        final String historyURL = appConfig.getSingleCountryHistoryURL().replace("country_name", name);
         HttpGet request = new HttpGet(historyURL);
 
         try (CloseableHttpClient httpClient = HttpClients.createDefault();

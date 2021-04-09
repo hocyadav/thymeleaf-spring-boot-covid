@@ -20,4 +20,5 @@ public class AppConfig {
     String allCountriesURL;
     String singleCountryURL;
     String singleCountryHistoryURL;
+    String allCountryHistoryURL;
 }
