@@ -2,6 +2,8 @@ package com.hari.springsecurity.entity;
 
 import lombok.*;
 
+import java.math.BigInteger;
+
 /**
  * @Author Hariom Yadav
  * @create 08-04-2021
@@ -12,7 +14,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 public class TimeLineSingleEntity {
-    Integer value;
+    BigInteger value;
     String title;
     String text;
 }

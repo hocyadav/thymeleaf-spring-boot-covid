@@ -4,12 +4,15 @@ import com.hari.springsecurity.entity.Popularity;
 import com.hari.springsecurity.entity.TimeLineEntity;
 import com.hari.springsecurity.entity.TimeLineSingleEntity;
 import com.hari.springsecurity.entity.WorldDataTableEntity;
+import com.hari.springsecurity.service.CountryDataService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -20,6 +23,9 @@ import java.util.*;
 //@RestController //for api end points
 @Controller //for thymeleaf view endpoints
 public class HomeResource {
+    @Autowired
+    CountryDataService countryDataService;
+
     //return html page from resource class
 //    @GetMapping("/")
 //    public String home() {
@@ -91,14 +97,25 @@ public class HomeResource {
         return "map-test-hardcoded-data";
     }
 
-    @GetMapping("/map2")
+    @GetMapping("/map2")//world
     public String mapTesting2(Model model) {//working
         model.addAttribute("all_data", getAllData());
 //        model.addAttribute("all_data", getAllDataState());//not working
         return "map-world-data";
     }
 
-    @GetMapping("/map3")
+    @GetMapping("/map-real")
+    public String mapRealTesting(Model model) {
+        model.addAttribute("all_data", getAllDataReal());
+        return "map-new-world-date";
+    }
+
+    private Map<String, Object> getAllDataReal() {
+        final Map<String, Object> map = countryDataService.getUIWorldMap();
+        return map;
+    }
+
+    @GetMapping("/map3")//india
     public String mapTesting3(Model model) {
         model.addAttribute("all_data", getAllDataState());
         return "map-state-data";
@@ -117,6 +134,17 @@ public class HomeResource {
     public String timelineChart(Model model) {//working
         model.addAttribute("all_data", getAllTimeLineData());
         return "timeline-chart";
+    }
+
+    @GetMapping("/timeline-india")
+    public String timelineDataState(Model model) {
+        model.addAttribute("all_data", getIndiaHistoryDate());
+        return "timeline2-india-chart";
+    }
+
+    private List<TimeLineEntity> getIndiaHistoryDate() {
+        final List<TimeLineEntity> list = countryDataService.groupByDate("india");
+        return list;
     }
 
 
@@ -153,19 +181,19 @@ public class HomeResource {
     //day wise top news
     private List<TimeLineEntity> getAllTimeLineData() {
         List<TimeLineEntity> list = new ArrayList<>();
-        list.add(getTimeLineEntity(2020, 1, 1, 200,"start title1", "text1", 300,"start title2", "text2"));
-        list.add(getTimeLineEntity(2020, 2, 10, 400,"start -- title2", "text2--", 500,"start title2 --", "text2--"));
-        list.add(getTimeLineEntity(2020, 3, 10, 400,"ndtc news", "news news ... ", 500,"news based on this value", "news based on this value"));
-        list.add(getTimeLineEntity(2020, 3, 20, 500,null, null, 500,null, null));
-        list.add(getTimeLineEntity(2020, 3, 25, 600,"lockdown started", null, 700,null, null));
-        list.add(getTimeLineEntity(2020, 3, 30, 60000,null, null, 40000,"lockdown end", null));
+        list.add(getTimeLineEntity(2020, 1, 1, 200, "start title1", "text1", 300, "start title2", "text2"));
+        list.add(getTimeLineEntity(2020, 2, 10, 400, "start -- title2", "text2--", 500, "start title2 --", "text2--"));
+        list.add(getTimeLineEntity(2020, 3, 10, 400, "ndtc news", "news news ... ", 500, "news based on this value", "news based on this value"));
+        list.add(getTimeLineEntity(2020, 3, 20, 500, null, null, 500, null, null));
+        list.add(getTimeLineEntity(2020, 3, 25, 600, "lockdown started", null, 700, null, null));
+        list.add(getTimeLineEntity(2020, 3, 30, 60000, null, null, 40000, "lockdown end", null));
         return list;
     }
 
     private TimeLineEntity getTimeLineEntity(int year, int month, int dayOfMonth, Integer value1, String start_title1, String text1, Integer value2, String start_title2, String text2) {
         TimeLineEntity e1 = TimeLineEntity.builder().date(LocalDate.of(year, month, dayOfMonth))
-                .entity1(TimeLineSingleEntity.builder().value(value1).title(start_title1).text(text1).build())
-                .entity2(TimeLineSingleEntity.builder().value(value2).title(start_title2).text(text2).build())
+                .entity1(TimeLineSingleEntity.builder().value(BigInteger.valueOf(value1)).title(start_title1).text(text1).build())
+                .entity2(TimeLineSingleEntity.builder().value(BigInteger.valueOf(value2)).title(start_title2).text(text2).build())
                 .build();
         return e1;
     }
@@ -198,7 +226,7 @@ public class HomeResource {
         map.putIfAbsent("IN-KA", getValue("Karnataka", 1231214));
         map.putIfAbsent("IN-MN", getValue("Manipur", 114));
         map.putIfAbsent("IN-PB", getValue("Panjab", 1243));
-        return  map;
+        return map;
     }
 
     private LinkedHashMap<String, Object> getValue(String uttarakhand, Object value1) {
@@ -217,7 +245,7 @@ public class HomeResource {
         map.put("France", 230);
         map.put("Germany", 300);
         map.put("India", 900);
-        return  map;
+        return map;
     }
 
     private Map<String, Integer> getData() {

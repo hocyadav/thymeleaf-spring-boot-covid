@@ -16,7 +16,7 @@ app-config:
   simpleKey: "value"
   allCountriesURL: "https://corona.lmao.ninja/v2/countries"
   singleCountryURL: "https://corona.lmao.ninja/v2/countries/country_name"
-  singleCountryHistoryURL: "https://corona.lmao.ninja/v2/historical/country_name"
+  singleCountryHistoryURL: "https://corona.lmao.ninja/v2/historical/country_name?lastdays=400"
   allCountryHistoryURL: "https://corona.lmao.ninja/v2/historical?lastdays=30"
 
 
