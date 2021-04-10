@@ -11,7 +11,8 @@
 
 </head>
 <body>
-<div id="map_id_1" style="width: 900px; height: 500px;"></div>
+<h3>World data</h3>
+<div id="map_id_1" style="width: 70%; height: 40%;"></div>
 
 <script th:inline="javascript">
     var real_data = /*[[${all_data}]]*/'noValue';
@@ -43,7 +44,7 @@
             var ar = [key, real_data[key]];
             arr.push(ar);
         })
-        alert(arr);
+        // alert(arr);
 
         // m0 : working
         var newVar = [
@@ -76,10 +77,14 @@
         //step 2
         var options = {
             // region: 'IN',
-            // displayMode: 'regions',
+            displayMode: 'regions',
+            backgroundColor: '#81d4fa',
+            datalessRegionColor: '#f8bbd0',
+            defaultColor: '#f5f5f5',
             // resolution: 'provinces',
-            width: 840,
-            height: 480,
+            // displayMode: 'markers',
+            // width: 840,
+            // height: 480,
             colorAxis: {colors: ['green', 'red']}
         };
         var chart = new google.visualization.GeoChart(document.getElementById('map_id_1'));
