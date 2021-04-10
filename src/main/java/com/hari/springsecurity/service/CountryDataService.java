@@ -53,7 +53,8 @@ public class CountryDataService {
     }
 
     @SneakyThrows
-    private List<EntityHistoryData> getAllCountryHistoryData() {
+    @Cacheable(value = "allCountryHistoryData")
+    public List<EntityHistoryData> getAllCountryHistoryData() {
         final String url = appConfig.getAllCountryHistoryURL();
         HttpGet request = new HttpGet(url);
 
